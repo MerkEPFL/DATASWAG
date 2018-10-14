@@ -85,8 +85,8 @@ hold on;
 
 setGlobalRanges(1,2048);
 
-plot(usefulFeaturesRange,trainCorrectData(:,usefulFeaturesRange)','g');
-plot(usefulFeaturesRange,trainErrorData(:,usefulFeaturesRange)','r');
+plot(usefulFeaturesRange,trainCorrectData(1,usefulFeaturesRange)','g');
+% plot(usefulFeaturesRange,trainErrorData(:,usefulFeaturesRange)','r');
 
 %%
 % 2d plot diff
@@ -225,13 +225,69 @@ scatter(bestMoving(:,1),bestMoving(:,2));
 
 bestMoving = [];
 
-for i = 600:1800 % trovato 1514 e 1769 come migliore
-    [~,maxVal] = tresholdPlotter(trainData(:,i),trainLabels);
-    bestMoving = [bestMoving;i,maxVal];
+for i = 600:1800 
+    [~,~,~,classError,minVal,minIndex] = tresholdPlotter(trainData(:,i),trainLabels);
+    bestMoving = [bestMoving;i,minVal];
 end
 
 figure;
 scatter(bestMoving(:,1),bestMoving(:,2));
+
+[M,I] = min(bestMoving(:,2));
+bestFeature = bestMoving(I,1);
+treshold = classError(minIndex,1);
+
+figure;
+scatter(1:l,trainData(:,bestFeature),[],trainLabels);
+hline(treshold);
+
+%% 
+
+
+
+%% CICLO A MANO ACCURACY:
+
+close all;
+clc;
+
+datiScelti = [1:5,501:505];
+featureScelta = 700;
+
+l = length(trainData(datiScelti,700));
+
+
+[tresholdAccuracy,maxVal,maxIndex,classError,minVal,minIndex] = tresholdPlotter(trainData(datiScelti,featureScelta),trainLabels(datiScelti));
+
+figure;
+scatter(1:l,trainData(datiScelti,featureScelta),[],trainLabels(datiScelti));
+hline(tresholdAccuracy(maxIndex,1));
+
+figure;
+plot(tresholdAccuracy(:,1),tresholdAccuracy(:,2))
+
+
+
+%% CICLO A MANO CLASS ERROR:
+
+close all;
+clc;
+
+datiScelti = [1:597];
+featureScelta = 700;
+
+l = length(trainData(datiScelti,700));
+
+
+[~,~,~,classError,minVal,minIndex] = tresholdPlotter(trainData(datiScelti,featureScelta),trainLabels(datiScelti));
+
+figure;
+scatter(1:l,trainData(datiScelti,featureScelta),[],trainLabels(datiScelti));
+hline(tresholdAccuracy(minIndex,1));
+
+figure;
+plot(classError(:,1),classError(:,2))
+
+
 
 %% treshold con una feature
 
@@ -271,7 +327,7 @@ end
 
 % /!\ ATTENZIONE: cicla e genera un sacco di plotmatrix 
 
-fromTo = 56:75; % fattore 10 di moltiplicazione (0:80) = (0:800)
+fromTo = 70:72; % fattore 10 di moltiplicazione (0:80) = (0:800)
 
 for i = fromTo
     lRange = i*10; % low range

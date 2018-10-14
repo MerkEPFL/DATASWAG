@@ -225,13 +225,108 @@ scatter(bestMoving(:,1),bestMoving(:,2));
 
 bestMoving = [];
 
-for i = 600:1800 % trovato 1514 e 1769 come migliore
-    [~,~,~,~,minVal] = tresholdPlotter(trainData(:,i),trainLabels);
+for i = 1300:1500 
+    [~,~,~,classError,minVal,minIndex] = tresholdPlotter(trainData(:,i),trainLabels);
     bestMoving = [bestMoving;i,minVal];
 end
 
 figure;
 scatter(bestMoving(:,1),bestMoving(:,2));
+
+[M,I] = min(bestMoving(:,2));
+bestFeature = bestMoving(I,1);
+treshold = classError(minIndex,2);
+
+l = length(trainData(:,bestFeature));
+
+figure;
+scatter(1:l,trainData(:,bestFeature),[],trainLabels);
+hline(treshold);
+
+%% AVG finder in range ricerca con SOLO UNA FEATURE classError
+
+bestMoving = [];
+bestRange = [];
+
+r = 15; 
+toMean = 5; 
+
+for i = 500:2000
+    setGlobalRanges(i,i+r);
+    sortedBySmallest = sort(trainData(:,usefulFeaturesRange)','descend');
+
+    if toMean == 1
+        sortedBySmallest = min(sortedBySmallest);
+    else
+        sortedBySmallest = mean(sortedBySmallest(1:toMean,:));
+    end
+
+    [~,~,~,classError,minVal,minIndex] = tresholdPlotter(sortedBySmallest',trainLabels);
+    bestMoving = [bestMoving;i,minVal];
+end
+
+figure;
+scatter(bestMoving(:,1),bestMoving(:,2));
+
+
+%%
+
+selectedTestData = testData(:,bestFeature);
+
+idxTestData = selectedTestData > treshold;
+
+labelToCSV(idxTestData,'predictionData1.csv','./predictions/')
+
+%% GAIA TEST
+
+idxTestGaiaData = zeros(199,1);
+
+labelToCSV(idxTestGaiaData,'predictionDataGaia.csv','./predictions/')
+
+
+%% CICLO A MANO ACCURACY:
+
+close all;
+clc;
+
+datiScelti = [1:5,501:505];
+featureScelta = 700;
+
+l = length(trainData(datiScelti,700));
+
+
+[tresholdAccuracy,maxVal,maxIndex,classError,minVal,minIndex] = tresholdPlotter(trainData(datiScelti,featureScelta),trainLabels(datiScelti));
+
+figure;
+scatter(1:l,trainData(datiScelti,featureScelta),[],trainLabels(datiScelti));
+hline(tresholdAccuracy(maxIndex,1));
+
+figure;
+plot(tresholdAccuracy(:,1),tresholdAccuracy(:,2))
+
+
+
+%% CICLO A MANO CLASS ERROR:
+
+close all;
+clc;
+
+datiScelti = [1:597];
+featureScelta = 700;
+
+l = length(trainData(datiScelti,700));
+
+
+[~,~,~,classError,minVal,minIndex] = tresholdPlotter(trainData(datiScelti,featureScelta),trainLabels(datiScelti));
+
+figure;
+scatter(1:l,trainData(datiScelti,featureScelta),[],trainLabels(datiScelti));
+hline(tresholdAccuracy(minIndex,1));
+
+figure;
+plot(classError(:,1),classError(:,2))
+
+
 
 %% treshold con una feature
 

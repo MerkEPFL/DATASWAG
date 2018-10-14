@@ -20,11 +20,12 @@ for treshold = minSD:0.001:maxSD % <-- here you can set the precision
     nGroup1 = sum(correctData);
     
     nGiusti0 = sum(idx.*(~correctData));
-    nGiusti1 = sum(idx.*(correctData));
+    nGiusti1 = sum(~idx.*(correctData));
     
     currentClassError = 1/2*(nGroup0-nGiusti0)/nGroup0 ...
         +  1/2*(nGroup1-nGiusti1)/nGroup1;
         
+    
     res = idx == correctData;
     totGiusti = sum(res);
     percGiusti = totGiusti / nObservations;
