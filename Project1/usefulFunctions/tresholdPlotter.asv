@@ -1,0 +1,32 @@
+function [tresholdAccuracy,maxVal,maxIndex] = tresholdPlotter(selectedData,correctData)
+%TRESHOLDPLOTTER Summary of this function goes here
+%   Detailed explanation goes here
+
+% find treshold
+
+maxSD = max(selectedData);
+minSD = min(selectedData);
+
+nObservations = length(correctData);
+
+tresholdAccuracy = [];
+
+for i = minSD:0.001:maxSD % <-- here you can set the precision
+    
+    idx = selectedData>i;
+    
+    nGroup0 = sum(~correctData);
+    nGroup1 = sum(correctData);
+    
+    nGiusti0 = idx*(~correctData);
+    
+    res = idx == correctData;
+    totGiusti = sum(res);
+    percGiusti = totGiusti / nObservations;
+    tresholdAccuracy = [tresholdAccuracy;[i,percGiusti]];
+end
+
+[maxVal,maxIndex] = max(tresholdAccuracy(:,2));
+
+end
+

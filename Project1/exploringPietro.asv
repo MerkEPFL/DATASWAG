@@ -85,8 +85,8 @@ hold on;
 
 setGlobalRanges(1,2048);
 
-plot(usefulFeaturesRange,trainCorrectData(1,usefulFeaturesRange)','g');
-% plot(usefulFeaturesRange,trainErrorData(:,usefulFeaturesRange)','r');
+plot(usefulFeaturesRange,trainCorrectData(:,usefulFeaturesRange)','g');
+plot(usefulFeaturesRange,trainErrorData(:,usefulFeaturesRange)','r');
 
 %%
 % 2d plot diff
@@ -226,8 +226,8 @@ scatter(bestMoving(:,1),bestMoving(:,2));
 bestMoving = [];
 
 for i = 600:1800 % trovato 1514 e 1769 come migliore
-    [~,~,~,~,minVal] = tresholdPlotter(trainData(:,i),trainLabels);
-    bestMoving = [bestMoving;i,minVal];
+    [~,maxVal] = tresholdPlotter(trainData(:,i),trainLabels);
+    bestMoving = [bestMoving;i,maxVal];
 end
 
 figure;
@@ -271,7 +271,7 @@ end
 
 % /!\ ATTENZIONE: cicla e genera un sacco di plotmatrix 
 
-fromTo = 70:72; % fattore 10 di moltiplicazione (0:80) = (0:800)
+fromTo = 56:75; % fattore 10 di moltiplicazione (0:80) = (0:800)
 
 for i = fromTo
     lRange = i*10; % low range
