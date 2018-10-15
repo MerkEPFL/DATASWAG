@@ -122,6 +122,7 @@ labelToCSV(~idxTestData,'prediction_f1609_t0_603.csv','./predictions/')
 
 
 
+
 %% plotmatrix per capire
 
 % /!\ ATTENZIONE: cicla e genera un sacco di plotmatrix 
