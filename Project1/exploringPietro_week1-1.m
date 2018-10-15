@@ -225,9 +225,10 @@ scatter(bestMoving(:,1),bestMoving(:,2));
 
 bestMoving = [];
 
-for i = 1300:1500 
+for i = 600:1800 
     [~,~,~,classError,minVal,minIndex] = tresholdPlotter(trainData(:,i),trainLabels);
-    bestMoving = [bestMoving;i,minVal];
+    bestTreshold = classError(minIndex,2);
+    bestMoving = [bestMoving;i,minVal,bestTreshold];
 end
 
 figure;
@@ -235,7 +236,7 @@ scatter(bestMoving(:,1),bestMoving(:,2));
 
 [M,I] = min(bestMoving(:,2));
 bestFeature = bestMoving(I,1);
-treshold = classError(minIndex,2);
+treshold = bestMoving(I,3);
 
 l = length(trainData(:,bestFeature));
 
@@ -243,7 +244,30 @@ figure;
 scatter(1:l,trainData(:,bestFeature),[],trainLabels);
 hline(treshold);
 
-%% AVG finder in range ricerca con SOLO UNA FEATURE classError
+
+%% AVG in range ricerca con PIU FEATURES classError (non completo, ma secondo me non funzionerà prendendo i minimi (overfitting))
+
+piuFeatures = [1734,1609,1485,1093,966];
+bestMoving = [];
+
+for currentFeature = piuFeatures 
+    [~,~,~,classError,minVal,minIndex] = tresholdPlotter(trainData(:,currentFeature),trainLabels);
+    bestTreshold = classError(minIndex,2);
+    bestMoving = [bestMoving;i,minVal,bestTreshold];
+end
+
+[M,I] = min(bestMoving(:,2));
+bestFeature = bestMoving(I,1);
+treshold = bestMoving(I,3);
+
+l = length(trainData(:,bestFeature));
+
+figure;
+scatter(1:l,trainData(:,bestFeature),[],trainLabels);
+hline(treshold);
+
+
+%% AVG range finder in range ricerca con SOLO UNA FEATURE classError
 
 bestMoving = [];
 bestRange = [];
@@ -366,7 +390,7 @@ end
 
 % /!\ ATTENZIONE: cicla e genera un sacco di plotmatrix 
 
-fromTo = 70:72; % fattore 10 di moltiplicazione (0:80) = (0:800)
+fromTo = 70:73; % fattore 10 di moltiplicazione (0:80) = (0:800)
 
 for i = fromTo
     lRange = i*10; % low range
