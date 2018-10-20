@@ -9,8 +9,6 @@ load('testSet.mat')
 [~,~,L2] = modelClassification(trainData, trainLabels,'diagLinear')
 [~,~,L3] = modelClassification(trainData, trainLabels,'diagQuadratic')
 
-
-
 plot(L2,'mo') %3rd
 hold on;
 plot(L1,'go') %best
@@ -18,14 +16,32 @@ hold on;
 plot(L3,'co') %2nd
 hold on;
 
+% with prior
 
-%% Prior
+[~,~,L1p] = Prior_modelClassification(trainData, trainLabels,'Linear')
+[~,~,L2p] = Prior_modelClassification(trainData, trainLabels,'diagLinear')
+[~,~,L3p] = Prior_modelClassification(trainData, trainLabels,'diagQuadratic')
 
-classifier = fitcdiscr(trainData, trainLabels, 'Prior', 'uniform');
+plot(2, L2p,'ro') 2rd
+hold on;
+plot(2,L1p,'ko') 1st
+hold on;
+plot(2,L3p,'bo') 2nd
+hold on;
 
-yhat = predict(classifier, trainData);
 
-loss =loss(classifier, )
+%% Prior test
+
+% classifier = fitcdiscr(trainData, trainLabels, 'DiscrimType', 'diagLinear', 'Prior', 'uniform')
+% 
+% 
+% yhat = predict(classifier, trainData);
+% 
+% loss =loss(classifier, trainData, trainLabels)
+% 
+
+
+
 
 %% pb avec celui-ci
 % fonctionne pas car: "You cannot use 'quadratic' type because one or more classes have singular covariance matrices."
