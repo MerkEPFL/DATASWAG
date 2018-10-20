@@ -1,9 +1,11 @@
 clc; clear all; close all;
 
+addpath('./data');
+addpath('./usefulFunctions');
+
 load('trainSet.mat')
 load('trainLabels.mat')
 load('testSet.mat')
-%addpath('usefulFunctions');
 
 [~,~,L1] = modelClassification(trainData, trainLabels,'Linear')
 [~,~,L2] = modelClassification(trainData, trainLabels,'diagLinear')
