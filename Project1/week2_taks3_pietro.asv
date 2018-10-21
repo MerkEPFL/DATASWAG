@@ -1,0 +1,48 @@
+%% LOADING DATA & VARS
+
+loadingInVars_pietro;
+
+%%%%%%%%% TRAINING & TEST ERRORS %%%%%%%%%%%
+%% SETTA I DATI PER IL TRAINER
+% features selection
+step = 1; % step = 1 per averle tutte
+featuresSelection = 1:step:nFeatures;
+nSelectedFeatures = size(featuresSelection,2);
+seed = 45;
+rng(seed);
+
+N = nObservations;
+k_fold = 10;
+
+% set1 & set2 selection
+cvp = cvpartition(N,'kfold',k_fold);
+
+
+for fold = 1:k_fold
+    clear('classifierModel');
+    
+    % setting masks
+    idxSet1 = cvp.training(fold);
+    idxSet2 = cvp.test(fold);
+    
+    % selecting data
+    dataSetTraining = trainData(idxSet1,featuresSelection);
+    dataLabelTraining = trainLabels(idxSet1);
+    dataSet2 = trainData(idxSet2,featuresSelection);
+    dataLabel2 = trainLabels(idxSet2);
+    
+    % initialize classifier
+    classifierModel = modelClassificationClass();
+    classifierModel = classifierModel.setTrainData(dataSetTraining,dataLabelTraining);
+    
+    % train classifier
+    classifierModel = classifierModel.train();
+    modelTypes = classifierModel.getModelTypes();
+    
+    % validation on test subset
+    testRes = classifierModel.structuredResults(dataSet2,dataLabel2);
+    
+end
+
+
+
