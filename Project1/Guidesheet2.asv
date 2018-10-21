@@ -1,11 +1,9 @@
 clc; clear all; close all;
 
-addpath('./data');
-addpath('./usefulFunctions');
-
 load('trainSet.mat')
 load('trainLabels.mat')
 load('testSet.mat')
+%addpath('usefulFunctions');
 
 [~,~,L1] = modelClassification(trainData, trainLabels,'Linear')
 [~,~,L2] = modelClassification(trainData, trainLabels,'diagLinear')
@@ -24,11 +22,11 @@ hold on;
 [~,~,L2p] = Prior_modelClassification(trainData, trainLabels,'diagLinear')
 [~,~,L3p] = Prior_modelClassification(trainData, trainLabels,'diagQuadratic')
 
-plot(2, L2p,'ro') %2rd
+plot(2, L2p,'ro') 2rd
 hold on;
-plot(2,L1p,'ko') %1st
+plot(2,L1p,'ko') 1st
 hold on;
-plot(2,L3p,'bo') %2nd
+plot(2,L3p,'bo') 2nd
 hold on;
 
 
@@ -49,9 +47,4 @@ hold on;
 % fonctionne pas car: "You cannot use 'quadratic' type because one or more classes have singular covariance matrices."
 
 [~,~,L4] = modelClassification(trainData, trainLabels,'Quadratic')  
-plot(L4,'o')
-hold on;
-
-% avec prior aussi
-[~,~,L4p] = Prior_modelClassification(trainData, trainLabels,'Quadratic')
 plot(L4,'o')
